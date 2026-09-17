@@ -150,13 +150,8 @@ async function initApp() {
       if (logoLinkEl) logoLinkEl.href = TOUR_CONFIG.logoUrl;
     }
 
-    // Apply dynamic theme colors if specified in tour.md
-    if (TOUR_CONFIG.accentColor) {
-      document.documentElement.style.setProperty('--accent', TOUR_CONFIG.accentColor);
-    }
-    if (TOUR_CONFIG.secondaryColor) {
-      document.documentElement.style.setProperty('--secondary', TOUR_CONFIG.secondaryColor);
-    }
+    // Initialize dark/light mode theme
+    initTheme();
 
     // Bind hashchange router
     window.addEventListener('hashchange', route);
@@ -485,6 +480,83 @@ function renderStop(id){
     
     // Initialize
     showSlide(0);
+  }
+}
+
+// Theme Toggle SVG Icons (matching color scheme, stroke-based)
+const MOON_SVG = `<svg class="theme-toggle-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+
+const SUN_SVG = `<svg class="theme-toggle-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+
+function getEffectiveTheme() {
+  try {
+    const stored = localStorage.getItem('disney_tour_theme');
+    if (stored === 'dark' || stored === 'light') {
+      return stored;
+    }
+  } catch (e) {}
+  return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+}
+
+function updateThemeUI(theme) {
+  if (theme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.documentElement.style.removeProperty('--accent');
+    document.documentElement.style.removeProperty('--secondary');
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+    if (TOUR_CONFIG && TOUR_CONFIG.accentColor) {
+      document.documentElement.style.setProperty('--accent', TOUR_CONFIG.accentColor);
+    }
+    if (TOUR_CONFIG && TOUR_CONFIG.secondaryColor) {
+      document.documentElement.style.setProperty('--secondary', TOUR_CONFIG.secondaryColor);
+    }
+  }
+
+  const iconEl = document.getElementById('theme-toggle-icon');
+  const textEl = document.getElementById('theme-toggle-text');
+  const btnEl = document.getElementById('theme-toggle');
+
+  if (iconEl && textEl && btnEl) {
+    if (theme === 'dark') {
+      iconEl.innerHTML = SUN_SVG;
+      textEl.textContent = 'Light Mode';
+      btnEl.setAttribute('aria-label', 'Switch to light mode');
+    } else {
+      iconEl.innerHTML = MOON_SVG;
+      textEl.textContent = 'Dark Mode';
+      btnEl.setAttribute('aria-label', 'Switch to dark mode');
+    }
+  }
+}
+
+function initTheme() {
+  const currentTheme = getEffectiveTheme();
+  updateThemeUI(currentTheme);
+
+  const toggleBtn = document.getElementById('theme-toggle');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const activeTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      const newTheme = activeTheme === 'dark' ? 'light' : 'dark';
+      try {
+        localStorage.setItem('disney_tour_theme', newTheme);
+      } catch (e) {}
+      updateThemeUI(newTheme);
+    });
+  }
+
+  // Follow system preference changes if user hasn't explicitly set a preference
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      let stored = null;
+      try {
+        stored = localStorage.getItem('disney_tour_theme');
+      } catch (err) {}
+      if (!stored) {
+        updateThemeUI(e.matches ? 'dark' : 'light');
+      }
+    });
   }
 }
 

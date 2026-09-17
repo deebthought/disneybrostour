@@ -39,8 +39,18 @@
     content="Explore the Los Feliz businesses and homes where Walt & Roy Disney built their first cartoon studio.">
   <meta name="twitter:image" content="https://disneybrostour.com/images/og-cover.jpg">
 
-  <!-- Canonical (recommended) -->
-  <link rel="canonical" href="https://disneybrostour.com/">
+  <!-- Early Theme Init to Prevent Flash -->
+  <script>
+    (function() {
+      try {
+        var stored = localStorage.getItem('disney_tour_theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (stored === 'dark' || (!stored && prefersDark)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
 
 </head>
 
@@ -55,6 +65,13 @@
 
   <main class="container" id="app"></main>
   <footer>
+    <div class="theme-toggle-wrap">
+      <button type="button" id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
+        <span id="theme-toggle-icon"></span>
+        <span id="theme-toggle-text">Dark Mode</span>
+      </button>
+    </div>
+
     <div id="footer-warning"></div>
 
     <div class="footer-logo"><a id="footer-logo-link"><img id="footer-logo-img" alt=""></a></div>
