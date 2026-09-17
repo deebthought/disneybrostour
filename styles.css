@@ -591,9 +591,10 @@ header{
 
 [data-theme="dark"] .footer-logo a {
   display: inline-block;
-  background: rgba(255, 255, 255, 0.92);
+  background: #e2e8f0; /* Soft light-grey badge to keep dark logo text readable */
   padding: 8px 16px;
   border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 /* Footer minimal */
