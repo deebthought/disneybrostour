@@ -302,7 +302,7 @@ function renderStop(id){
   ${stop.transcript ? `
   <div class="disclosure" id="disc">
     <button type="button" aria-expanded="false"><span style="font-family: 'Montserrat', sans-serif; color:var(--accent); font-weight:600">Transcript</span><span class="arrow">▶</span></button>
-    <div class="panel" style="display:none"><div class="muted" style="white-space:pre-line">${stop.transcript}</div></div>
+    <div class="panel" style="display:none"><div class="transcript-text">${stop.transcript}</div></div>
   </div>` : ''}
 
   <div class="inline-buttons single" style="margin-top:8px">

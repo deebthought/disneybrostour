@@ -475,25 +475,6 @@ header{
 
 /* Transcript disclosure */
 .disclosure{border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;background:#fff}
-.disclosure button{
-  width:100%;display:flex;justify-content:space-between;align-items:center;
-  padding:14px 16px;background:#fff;border:0;font-weight:600;
-}
-.disclosure .panel{padding:0 16px 16px}
-
-/* Transcript arrow styling */
-.disclosure .arrow {
-  font-size: 18px;
-  line-height: 1;
-  transition: transform 0.3s ease;
-  display: inline-block;
-}
-
-.disclosure button[aria-expanded="true"] .arrow {
-  transform: rotate(180deg);
-}
-
-/* Transcript disclosure with rotating arrow */
 .disclosure button {
   width: 100%;
   display: flex;
@@ -504,19 +485,31 @@ header{
   border: 0;
   font-weight: 600;
   color: var(--fg);
+  cursor: pointer;
+}
+.disclosure .panel{padding:0 16px 18px}
+
+.transcript-text {
+  font-family: 'Montserrat', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  color: #1f2937; /* High-contrast dark charcoal for comfortable reading */
+  font-weight: 400;
+  white-space: pre-line;
+  letter-spacing: 0.01em;
+  margin: 0;
 }
 
-.disclosure button span:first-child {
-  color: var(--fg);
-}
-
-.disclosure button span:last-child {
+/* Transcript arrow styling */
+.disclosure .arrow {
+  font-size: 18px;
+  line-height: 1;
   transition: transform 0.2s ease;
   display: inline-block;
   color: var(--accent);
 }
 
-.disclosure button[aria-expanded="true"] span:last-child {
+.disclosure button[aria-expanded="true"] .arrow {
   transform: rotate(90deg);
 }
 
@@ -646,7 +639,12 @@ main.container{padding-bottom:40px
   }
   
   .disclosure .panel {
-    padding: 0 14px 14px;
+    padding: 0 14px 16px;
+  }
+
+  .transcript-text {
+    font-size: 15.5px;
+    line-height: 1.6;
   }
   
   .hero {
